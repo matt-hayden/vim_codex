@@ -1,8 +1,3 @@
-import urllib, urllib.request
-import json
-import os
-import sys
-
 try:
     import vim
 except:
