@@ -1,14 +1,13 @@
 import urllib, urllib.request
 import json
 import os
-import configparser
 import sys
 
 try:
-  import vim
+    import vim
 except:
-  print("No vim module available outside vim")
-  pass
+    print("No vim module available outside vim")
+    pass
 
 
 from openai import OpenAI
@@ -19,39 +18,13 @@ MAX_SUPPORTED_INPUT_LENGTH = 4096
 USE_STREAM_FEATURE = True
 MAX_TOKENS_DEFAULT = 64
 
-CONFIG_DIR = os.getenv('XDG_CONFIG_HOME', os.path.expanduser('~/.config'))
-API_KEYS_LOCATION = os.path.join(CONFIG_DIR, 'openaiapirc')
-
-def create_template_ini_file():
-    """
-    If the ini file does not exist create it and add the organization_id and
-    secret_key
-    """
-    if not os.path.isfile(API_KEYS_LOCATION):
-        with open(API_KEYS_LOCATION, 'w') as f:
-            f.write('[openai]\n')
-            f.write('organization_id=\n')
-            f.write('secret_key=\n')
-
-        print('OpenAI API config file created at {}'.format(API_KEYS_LOCATION))
-        print('Please edit it and add your organization ID and secret key')
-        print('If you do not yet have an organization ID and secret key, you\n'
-               'need to register for OpenAI Codex: \n'
-                'https://openai.com/blog/openai-codex/')
-        sys.exit(1)
-
 
 def initialize_openai_api():
     """
     Initialize the OpenAI API
     """
     global client
-    # Check if file at API_KEYS_LOCATION exists
-    create_template_ini_file()
-    config = configparser.ConfigParser()
-    config.read(API_KEYS_LOCATION)
-
-    client = OpenAI(api_key=config['openai']['secret_key'].strip('"').strip("'"))
+    client = OpenAI()
 
 
 def complete_input_max_length(input_prompt, max_input_length=MAX_SUPPORTED_INPUT_LENGTH, stop=None, max_tokens=64):
